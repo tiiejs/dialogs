@@ -1,11 +1,70 @@
-<div class="tiie-portlet__head">
-    <div class="tiie-portlet__head-icon">
-        <i class="fas fa-ad"></i>
-    </div>
-    <div class="tiie-portlet__head-title">
-        Title
-    </div>
-</div>
-<div class="tiie-portlet__body" name="content"></div>
-<div class="tiie-portlet__foot">
+<div class="em-dialogs__dialog tiie-portlet">
+    {{? it.title || it.icon || it.buttonsClose == 1}}
+        <div class="tiie-portlet__head container">
+            <div class="row">
+                <div class="col-10 tiie--text-align-left">
+                        {{? it.icon}}
+                            <div class="tiie-portlet__head-icon">
+                                <i class="{{= it.icon}}"></i>
+                            </div>
+                        {{?}}
+                        {{? it.title}}
+                            <div class="tiie-portlet__head-title">
+                                {{= it.title}}
+                            </div>
+                        {{?}}
+                </div>
+                <div class="col-2 tiie--text-align-right">
+                    {{? it.buttonsClose == 1}}
+                        <span event-click="close">
+                            {{= it["@icons"].get("close")}}
+                        </span>
+                    {{?}}
+                </div>
+            </div>
+        </div>
+    {{?}}
+    <div class="tiie-portlet__body container" name="content"></div>
+    {{? it.buttons.length}}
+        <div class="tiie-portlet__foot container">
+            <div class="row">
+                <div class="col">
+                    {{~ it.buttons.filter(b => b.section == "left") :button}}
+                        <button class="tiie-button{{? button.type}} --{{= button.type}}{{?}}" {{? button.event}}event-click="{{= button.event}}{{?}}">
+                            {{? button.icon}}
+                                <i class="{{= button.icon}}"></i>
+                            {{?}}
+                            {{? button.label}}
+                                {{= button.label}}
+                            {{?}}
+                        </button>
+                    {{~}}
+                </div>
+                <div class="col tiie--text-align-center">
+                    {{~ it.buttons.filter(b => b.section == "center") :button}}
+                        <button class="tiie-button{{? button.type}} --{{= button.type}}{{?}}" {{? button.event}}event-click="{{= button.event}}{{?}}">
+                            {{? button.icon}}
+                                <i class="{{= button.icon}}"></i>
+                            {{?}}
+                            {{? button.label}}
+                                {{= button.label}}
+                            {{?}}
+                        </button>
+                    {{~}}
+                </div>
+                <div class="col tiie--text-align-right">
+                    {{~ it.buttons.filter(b => b.section == "right") :button}}
+                        <button class="tiie-button{{? button.type}} --{{= button.type}}{{?}}" {{? button.event}}event-click="{{= button.event}}{{?}}">
+                            {{? button.icon}}
+                                <i class="{{= button.icon}}"></i>
+                            {{?}}
+                            {{? button.label}}
+                                {{= button.label}}
+                            {{?}}
+                        </button>
+                    {{~}}
+                </div>
+            </div>
+        </div>
+    {{?}}
 </div>

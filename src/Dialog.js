@@ -1,13 +1,28 @@
+/** @module Tiie/Dialogs */
 import TiieObject from "Tiie/Object";
+
 import jQuery from "jquery";
 
-import icons from "./resources/icons.js";
 import templateLayout from "./resources/layout.html";
 import templateContent from "./resources/content.html";
+import templateContentContainer from "./resources/contentContainer.html";
 
 import View from "Tiie/View";
 
 const cn = 'Dialog';
+
+/**
+ * Main class to display dialog.
+ *
+ * @param {object} [data]
+ * @param {string} [data.type]
+ * @param {string} [data.layout]
+ * @param {string} [data.title]
+ * @param {string} [data.buttons]
+ * @param {string} [data.buttonsClose]
+ *
+ * @class
+ */
 class Dialog extends View {
     constructor(data = {}) {
         super(templateLayout);
@@ -15,96 +30,70 @@ class Dialog extends View {
         let p = this.__private(cn, {
             type : Dialog.TYPE_NORMAL,
             buttons : [],
-            content : null,
         });
 
         this.__define("data.structure", {
-            type : {type : "string", default : null, notNull : 0},
+            type : {type : "string", default : "primary", notNull : 1},
+            layout : {type : "string", default : "portlet", notNull : 1},
             title : {type : "string", default : null, notNull : 0},
-            buttons : {type : "array", default : [], notNull : 0},
+            buttons : {type : "array", default : [], notNull : 1},
+            buttonsClose : {type : "boolean", default : 1, notNull : 1},
         });
 
         this.set(data, {silently : 1, defined : 1});
 
-        // if(param.content) {
-        //     this.set("-content", params.content);
-        // }
-
-        // if (!this.get("&buttons").some(b => b.id == "close")) {
-        //     this.get("&buttons").push({
-        //         id : "actionClose",
-        //         action : "close",
-        //     });
-        // }
+        if(data.content) {
+            this.set("-content", data.content);
+        }
 
         this.on([
             "type:change",
             "title:change",
-            // "content:change",
+            "content:change",
             "buttons:change",
+            "buttonsClose:change",
         ], () => {
             this.render();
         });
 
-        // this.on("action.close:run", (event, params) => {
-        //     // this.emit("action.close:stop")
-        //     // this.emit("action.close:pouse")
-        //     // this.emit("action.close:error")
-        //     this.emit("action.close:finish")
-
-        //     this.destroy();
-        // });
-
-        // p.element.on("click", ".em-dialogs__dialog-action", (event) => {
-        //     let target = jQuery(event.currentTarget),
-        //         action = target.data("action")
-        //     ;
-
-        //     this.emit(`action.${action}:run`);
-
-        //     event.stopPropagation();
-        // });
+        this.on("events.close", (event, params) => {
+            this.destroy();
+        });
     }
 
-    // get(name, value = null, params = {}) {
-    //     let p = this.__private(cn);
+    __setValue(target, name, value, emitparams = {}) {
+        let p = this.__private(cn);
 
-    //     if(name == "content") {
-    //         if(typeof content == "string") {
-    //             this.element("content").html(content);
-    //         } else if(content instanceof View){
-    //             content.target(this.element("content"));
-    //         } else {
-    //             this.log("Unsuported type of content for dialog.", "notice");
-    //         }
-    //     } else {
-    //         return super.get(name, value, params);
-    //     }
-    // }
+        if(name == "buttons") {
+            value.forEach((button) => {
+                button.section = button.section ? button.section : "center";
+                button.type = button.type ? button.type : "primary";
+            });
 
-    // set(name, value = null, params = {}) {
-    //     let p = this.__private(cn);
-
-    //     if(name == "content") {
-
-    //     } else {
-    //         return super.get(name, value, params);
-    //     }
-    // }
+            return super.__setValue(target, name, value, emitparams);
+        } else {
+            return super.__setValue(target, name, value, emitparams);
+        }
+    }
 
     render() {
         let p = this.__private(cn),
-            content = this.get("content")
+            content = this.get("content"),
+            layout = this.get("layout")
         ;
 
-        this.element().content(this.__template(templateContent, this.data({clone : 0})));
+        if(layout == "portlet") {
+            this.__content("__root", templateContent);
+        } else if(layout == "container") {
+            this.__content("__root", templateContentContainer);
+        }
 
         if(typeof content == "string") {
             this.element("content").html(content);
         } else if(content instanceof View){
             content.target(this.element("content"));
         } else {
-            this.log("Unsuported type of content for dialog.", "notice");
+            this.log("Unsuported type of content for dialog.", "notice", "Topi.Dialogs.Dialog::render");
         }
 
         return this;

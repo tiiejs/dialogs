@@ -14,7 +14,7 @@ class Service extends TiieObject {
 
         setInterval(() => {
             this._reload();
-        }, 1000);
+        }, 100);
     }
 
     /**
@@ -40,8 +40,6 @@ class Service extends TiieObject {
             // First get frames.
             frames = p.frames.attach(target, fixed)
         ;
-
-        console.log('Service.attach', params);
 
         let dialogs = new Dialogs(frames, {
             align : params.align,
@@ -74,7 +72,7 @@ class Service extends TiieObject {
         });
 
         if (destroyed) {
-            p.dialogs = p.dialogs.filter(dialog => dialog.is("@destroyed"));
+            p.dialogs = p.dialogs.filter(dialog => dialog.is("@destroyed") == 0);
         }
     }
 }

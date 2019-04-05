@@ -7,6 +7,8 @@ import FramesLayout from "Tiie/Frames/Layouts/Layout";
 import FramesLayer from "Tiie/Frames/Layer";
 import FramesAnimation from "Tiie/Frames/Animation";
 
+import lorem from "Tiie/Utils/lorem";
+
 const cn = 'Dialogs';
 
 /**
@@ -56,6 +58,7 @@ class Dialogs extends TiieObject {
             marginLeft : params.marginLeft,
             marginRight : params.marginRight,
             marginTop : params.marginTop,
+            modal : 1,
         });
     }
 
@@ -68,10 +71,18 @@ class Dialogs extends TiieObject {
      */
     create(params = {}) {
         let p = this.__private(cn),
-            object = new Dialog(params),
+            object = new Dialog({
+                type : params.type,
+                layout : params.layout,
+                title : params.title,
+                content : params.content,
+                buttons : params.buttons,
+                buttonsClose : params.buttonsClose,
+            }),
+
             frame = p.frames.create(p.framesLayerName, {
-                width : 500,
-                height : "auto",
+                width : params.width ? params.width : "normal",
+                height : params.height ? params.height : "auto",
             })
         ;
 
@@ -79,7 +90,6 @@ class Dialogs extends TiieObject {
             object,
             frame,
             destroyed : 0,
-            hover : 0,
         };
 
         object.render();
@@ -87,13 +97,9 @@ class Dialogs extends TiieObject {
         p.dialogs.push(dialog);
 
         if (params.duration) {
-            setTimeout(function() {
+            setTimeout(() => {
                 dialog.destroyed = 1;
             }, params.duration);
-        } else {
-            setTimeout(function() {
-                // dialog.destroyed = 1;
-            }, 3000);
         }
 
         frame.element().append(object.element());
@@ -106,22 +112,21 @@ class Dialogs extends TiieObject {
             destroyed = 0
         ;
 
-        if (p.dialogs.some(dialog => dialog.frame.is("@hover"))) {
-            return;
-        }
+        // if (p.dialogs.some(dialog => dialog.frame.is("@hover"))) {
+        //     return;
+        // }
 
         p.dialogs.forEach((dialog) => {
             if (dialog.destroyed) {
                 dialog.frame.destroy();
-
                 destroyed = 1;
-                return;
             }
 
             if (dialog.object.is("@destroyed")) {
                 dialog.frame.destroy();
-
+                dialog.destroyed = 1;
                 destroyed = 1;
+
                 return;
             }
 
@@ -133,8 +138,10 @@ class Dialogs extends TiieObject {
         });
 
         if (destroyed) {
-            p.dialogs = p.dialogs.filter(dialog => !dialog.object.is("@destroyed"));
+            p.dialogs = p.dialogs.filter(dialog => dialog.destroyed == 0);
         }
+
+        return this;
     }
 
     testGenerateDialogs() {
@@ -175,6 +182,36 @@ class Dialogs extends TiieObject {
             title : `Title ${Dialog.TYPE_ERROR}`,
             message : `Message ${Dialog.TYPE_ERROR}`,
         });
+    }
+
+    testCreaeteDialog() {
+        let p = this.__private(cn);
+
+        let dialog = app.components().get("@dialogs.window").create({
+            title : "Nowe ogłoszenie zostało dodane do bazy danych.",
+            content : lorem(),
+            buttons : [{
+                id : "1",
+                type : "danger",
+                label : "Danger",
+                section : "left",
+                event : "danger",
+            }, {
+                id : "2",
+                type : "success",
+                label : "Succes",
+                section : "center",
+                event : "success",
+            }, {
+                id : "3",
+                type : "primary",
+                label : "Close",
+                section : "right",
+                event : "close",
+            }]
+        });
+
+        return dialog;
     }
 }
 
