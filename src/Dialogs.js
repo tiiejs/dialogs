@@ -58,6 +58,7 @@ class Dialogs extends TiieObject {
             marginLeft : params.marginLeft,
             marginRight : params.marginRight,
             marginTop : params.marginTop,
+
             modal : 1,
         });
     }

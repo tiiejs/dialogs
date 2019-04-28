@@ -23,22 +23,27 @@ class Service extends TiieObject {
      * @param {jQuery}   target
      * @param {boolean}  fixed
      *
-     * @param {object} [params]
+     * @param {object}   [params]
+     * @param {number}   [params.fixed]
+     * @param {number}   [params.zIndex]
      * @param {string[]} [params.align]
-     * @param {string} [params.animationHideName]
-     * @param {string} [params.animationShowName]
-     * @param {number} [params.margin]
-     * @param {number} [params.marginBottom]
-     * @param {number} [params.marginLeft]
-     * @param {number} [params.marginRight]
-     * @param {number} [params.marginTop]
+     * @param {string}   [params.animationHideName]
+     * @param {string}   [params.animationShowName]
+     * @param {number}   [params.margin]
+     * @param {number}   [params.marginBottom]
+     * @param {number}   [params.marginLeft]
+     * @param {number}   [params.marginRight]
+     * @param {number}   [params.marginTop]
      *
      * @return {Tiie.Dialogs.Dialogs}
      */
-    attach(target, fixed = 0, params = {}) {
+    attach(target, params = {}) {
         let p = this.__private(cn),
             // First get frames.
-            frames = p.frames.attach(target, fixed)
+            frames = p.frames.attach(target, {
+                fixed : params.fixed,
+                zIndex : params.zIndex,
+            })
         ;
 
         let dialogs = new Dialogs(frames, {

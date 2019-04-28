@@ -17,17 +17,18 @@ export default function(app, params = {}) {
     app.components().set("@dialogs", service);
 
     // Attach dialogs to whole window.
-    app.components().set("@dialogs.window", service.attach(app.target(), 1, {
-        align : params.windowAlign ? params.windowAlign : ["center"],
-        animationHideName : params.windowAnimationHideName ? params.windowAnimationHideName : FramesAnimation.ANIMATION_ZOOM_OUT,
-        animationShowName : params.windowAnimationShowName ? params.windowAnimationShowName : FramesAnimation.ANIMATION_SLIDE_IN_FROM_TOP,
+    app.components().set("@dialogs.window", service.attach(app.target(), {
+        fixed : 1,
+        animationHideName : params.windowAnimationHideName,
+        animationShowName : params.windowAnimationShowName,
 
-        // margin : params.windowMargin !== undefined ? params.windowMargin : 20,
-        // margin : params.windowMargin,
-        // marginBottom : params.windowMarginBottom,
-        // marginLeft : params.windowMarginLeft,
-        // marginRight : params.windowMarginRight,
-        marginTop : params.windowMarginTop != undefined ? params.windowMarginTop : 100,
+        align : params.windowAlign,
+        margin : params.windowMargin,
+        marginTop : params.windowMarginTop,
+        marginBottom : params.windowMarginBottom,
+        marginRight : params.windowMarginRight,
+        marginLeft : params.windowMarginLeft,
+        zIndex : params.windowZIndex,
     }));
 
     return 1;
