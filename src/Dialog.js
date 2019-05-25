@@ -93,7 +93,7 @@ class Dialog extends View {
         } else if(content instanceof View){
             content.target(this.element("content"));
         } else {
-            this.log("Unsuported type of content for dialog.", "notice", "Topi.Dialogs.Dialog::render");
+            this.__log("Unsuported type of content for dialog.", "notice", "Topi.Dialogs.Dialog::render");
         }
 
         return this;

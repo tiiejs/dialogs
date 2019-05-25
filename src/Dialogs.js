@@ -113,7 +113,7 @@ class Dialogs extends TiieObject {
             destroyed = 0
         ;
 
-        // if (p.dialogs.some(dialog => dialog.frame.is("@hover"))) {
+        // if (p.dialogs.some(dialog => dialog.frame.is("@view.hover"))) {
         //     return;
         // }
 
@@ -131,7 +131,7 @@ class Dialogs extends TiieObject {
                 return;
             }
 
-            if (!dialog.object.is("@visible")) {
+            if (!dialog.object.is("@view.visible")) {
                 dialog.frame.hide();
             } else {
                 dialog.frame.show();
